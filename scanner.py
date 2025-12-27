@@ -30,18 +30,15 @@ print("Local Network Scan Started...\n")
 for i in range(1, 255):
     ip = NETWORK + str(i)
 
-    if ping_host(ip):
+    open_ports = scan_ports(ip, PORTS)
+
+    if open_ports:
         hostname = get_hostname(ip)
-        open_ports = scan_ports(ip, PORTS)
         suspicious = detect_suspicious_ports(open_ports)
 
         print(f"IP        : {ip}")
         print(f"Hostname  : {hostname}")
-
-        if open_ports:
-            print(f"OpenPorts : {open_ports}")
-        else:
-            print("OpenPorts : None")
+        print(f"OpenPorts : {open_ports}")
 
         if suspicious:
             print("ALERT : Suspicious Ports Detected")
@@ -49,3 +46,4 @@ for i in range(1, 255):
                 print(f"   - Port {p} : {desc}")
 
         print("-" * 40)
+
