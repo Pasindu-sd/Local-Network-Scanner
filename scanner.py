@@ -44,7 +44,7 @@ for i in range(1, 255):
             print("OpenPorts : None")
 
         if suspicious:
-            print("⚠️ ALERT : Suspicious Ports Detected")
+            print("ALERT : Suspicious Ports Detected")
             for p, desc in suspicious.items():
                 print(f"   - Port {p} : {desc}")
 
