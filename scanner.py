@@ -1,7 +1,7 @@
 from utils import ping_host, get_hostname, scan_ports
 
 NETWORK = "192.168.8."
-PORTS = [21, 22, 23, 80, 443, 3306]
+PORTS = [21, 22, 23, 25, 53, 80, 110, 143, 443, 465, 587, 993, 995, 1433, 1521, 3306, 3389, 5432, 5900, 8080]
 
 print("Local Network Scan Started...\n")
 
