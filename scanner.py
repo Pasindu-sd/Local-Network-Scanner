@@ -54,7 +54,15 @@ def detect_suspicious_ports(open_ports):
             found[port] = SUSPICIOUS_PORTS[port]
     return found
 
-
+def calculate_risk(suspicious_ports):
+    count = len(suspicious_ports)
+    if count == 0:
+        return "LOW"
+    elif count <= 2:
+        return "MEDIUM"
+    else:
+        return "HIGH"
+    
 print("Local Network Scan Started...\n")
 
 for i in range(1, 255):
@@ -69,6 +77,7 @@ for i in range(1, 255):
         print(f"IP        : {ip}")
         print(f"Hostname  : {hostname}")
         print(f"OpenPorts : {open_ports}")
+        print(f"Risk Level: {calculate_risk(suspicious)}")
 
         if suspicious:
             print("ALERT : Suspicious Ports Detected")
