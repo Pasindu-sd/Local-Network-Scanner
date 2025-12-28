@@ -1,6 +1,7 @@
-from utils import ping_host, get_hostname, scan_ports
+import socket
+import subprocess
 
-NETWORK = "172.29.151."
+NETWORK = "192.168.8."
 PORTS = [21, 22, 23, 25, 53, 80, 110, 143, 443, 465, 587, 993, 995, 1433, 1521, 3306, 3389, 5432, 5900, 8080]
 
 SUSPICIOUS_PORTS = {
@@ -16,6 +17,26 @@ SUSPICIOUS_PORTS = {
     3389: "RDP Remote Desktop",
     5900: "VNC Remote Access"
 }
+
+def ping_host(ip):
+   result = subprocess.run(["ping", "-n", "1", "-w", "300", ip], stdout=subprocess.DEVNULL)   
+   return result.returncode == 0
+
+def get_hostname(ip):
+   try:
+      return socket.gethostbyaddr(ip)[0]
+   except:
+      return "Unknown"
+   
+def scan_ports(ip, ports):
+    open_ports = []
+    for port in ports:
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.settimeout(0.5)
+        if s.connect_ex((ip, port)) == 0:
+            open_ports.append(port)
+        s.close()
+    return open_ports
 
 def detect_suspicious_ports(open_ports):
     found = {}
