@@ -68,6 +68,9 @@ print("Local Network Scan Started...\n")
 for i in range(1, 255):
     ip = NETWORK + str(i)
 
+    alive = ping_host(ip)
+    if not alive:
+        continue
     open_ports = scan_ports(ip, PORTS)
 
     if open_ports:
