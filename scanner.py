@@ -24,7 +24,6 @@ SUSPICIOUS_PORTS = {
 
 
 def internet_access_check():
-    """Check if lab network can access the internet"""
     try:
         result = subprocess.run(
             ["ping", "-n", "1", "-w", "300", "8.8.8.8"],
@@ -90,9 +89,9 @@ def calculate_risk(suspicious_ports, internet_enabled):
 
 
 
-print("=" * 50)
+print("=" * 42)
 print("   LOCAL NETWORK & LAB SECURITY SCANNER")
-print("=" * 50)
+print("=" * 42)
 
 print("\n[+] Checking Internet Access Status...\n")
 
