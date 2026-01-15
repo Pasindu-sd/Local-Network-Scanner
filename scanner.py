@@ -1,7 +1,6 @@
 import socket
 import subprocess
 
-# ---------------- CONFIG ----------------
 NETWORK = "192.168.56."
 PORTS = [
     21, 22, 23, 25, 53, 80, 110, 143, 443,
@@ -23,7 +22,6 @@ SUSPICIOUS_PORTS = {
     5900: "VNC Remote Access"
 }
 
-# ------------- FUNCTIONS ----------------
 
 def internet_access_check():
     """Check if lab network can access the internet"""
@@ -81,7 +79,7 @@ def calculate_risk(suspicious_ports, internet_enabled):
     score = len(suspicious_ports)
 
     if internet_enabled:
-        score += 2  # Internet violation adds risk
+        score += 2 
 
     if score == 0:
         return "LOW"
@@ -91,7 +89,6 @@ def calculate_risk(suspicious_ports, internet_enabled):
         return "HIGH"
 
 
-# ------------- MAIN PROGRAM ----------------
 
 print("=" * 50)
 print("   LOCAL NETWORK & LAB SECURITY SCANNER")
@@ -102,9 +99,9 @@ print("\n[+] Checking Internet Access Status...\n")
 internet_enabled = internet_access_check()
 
 if internet_enabled:
-    print("[VIOLATION] Internet access is ENABLED in LAB NETWORK ❌")
+    print("[VIOLATION] Internet access is ENABLED in LAB NETWORK")
 else:
-    print("[OK] Internet access is BLOCKED (Lab Safe) ✅")
+    print("[OK] Internet access is BLOCKED (Lab Safe)")
 
 print("\nStarting Local Network Scan...\n")
 
@@ -130,4 +127,4 @@ for i in range(1, 255):
 
     print("-" * 50)
 
-print("\nScan Completed ✔")
+print("\nScan Completed")
