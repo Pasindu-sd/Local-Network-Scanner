@@ -1,7 +1,7 @@
 import socket
 import subprocess
 
-NETWORK = "192.168.56."
+NETWORK = "10.202.83."
 PORTS = [
     21, 22, 23, 25, 53, 80, 110, 143, 443,
     465, 587, 993, 995, 1433, 1521, 3306,
