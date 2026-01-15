@@ -18,6 +18,19 @@ SUSPICIOUS_PORTS = {
     5900: "VNC Remote Access"
 }
 
+
+def internet_access_check():
+    try:
+        result = subprocess.run(
+            ["ping", "-n", "1", "-w", "300", "8.8.8.8"],
+            stdout=subprocess.DEVNULL
+        )
+        return result.returncode == 0
+    except:
+        return False
+
+
+
 def ping_host(ip):
     try:
         result = subprocess.run(
