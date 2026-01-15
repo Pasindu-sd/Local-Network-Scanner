@@ -1,8 +1,13 @@
 import socket
 import subprocess
 
+# ---------------- CONFIG ----------------
 NETWORK = "192.168.56."
-PORTS = [21, 22, 23, 25, 53, 80, 110, 143, 443, 465, 587, 993, 995, 1433, 1521, 3306, 3389, 5432, 5900, 8080]
+PORTS = [
+    21, 22, 23, 25, 53, 80, 110, 143, 443,
+    465, 587, 993, 995, 1433, 1521, 3306,
+    3389, 5432, 5900, 8080
+]
 
 SUSPICIOUS_PORTS = {
     21: "FTP (Unencrypted File Transfer)",
@@ -18,8 +23,10 @@ SUSPICIOUS_PORTS = {
     5900: "VNC Remote Access"
 }
 
+# ------------- FUNCTIONS ----------------
 
 def internet_access_check():
+    """Check if lab network can access the internet"""
     try:
         result = subprocess.run(
             ["ping", "-n", "1", "-w", "300", "8.8.8.8"],
@@ -28,7 +35,6 @@ def internet_access_check():
         return result.returncode == 0
     except:
         return False
-
 
 
 def ping_host(ip):
@@ -41,12 +47,14 @@ def ping_host(ip):
     except:
         return False
 
+
 def get_hostname(ip):
-   try:
-      return socket.gethostbyaddr(ip)[0]
-   except:
-      return "Unknown"
-   
+    try:
+        return socket.gethostbyaddr(ip)[0]
+    except:
+        return "Unknown"
+
+
 def scan_ports(ip, ports):
     open_ports = []
     for port in ports:
@@ -60,6 +68,7 @@ def scan_ports(ip, ports):
             pass
     return open_ports
 
+
 def detect_suspicious_ports(open_ports):
     found = {}
     for port in open_ports:
@@ -67,38 +76,58 @@ def detect_suspicious_ports(open_ports):
             found[port] = SUSPICIOUS_PORTS[port]
     return found
 
-def calculate_risk(suspicious_ports):
-    count = len(suspicious_ports)
-    if count == 0:
+
+def calculate_risk(suspicious_ports, internet_enabled):
+    score = len(suspicious_ports)
+
+    if internet_enabled:
+        score += 2  # Internet violation adds risk
+
+    if score == 0:
         return "LOW"
-    elif count <= 2:
+    elif score <= 2:
         return "MEDIUM"
     else:
         return "HIGH"
-    
-print("Local Network Scan Started...\n")
+
+
+# ------------- MAIN PROGRAM ----------------
+
+print("=" * 50)
+print("   LOCAL NETWORK & LAB SECURITY SCANNER")
+print("=" * 50)
+
+print("\n[+] Checking Internet Access Status...\n")
+
+internet_enabled = internet_access_check()
+
+if internet_enabled:
+    print("[VIOLATION] Internet access is ENABLED in LAB NETWORK ❌")
+else:
+    print("[OK] Internet access is BLOCKED (Lab Safe) ✅")
+
+print("\nStarting Local Network Scan...\n")
 
 for i in range(1, 255):
     ip = NETWORK + str(i)
 
-    alive = ping_host(ip)
-    if not alive:
+    if not ping_host(ip):
         continue
+
     open_ports = scan_ports(ip, PORTS)
+    hostname = get_hostname(ip)
+    suspicious = detect_suspicious_ports(open_ports)
 
-    if open_ports:
-        hostname = get_hostname(ip)
-        suspicious = detect_suspicious_ports(open_ports)
+    print(f"IP        : {ip}")
+    print(f"Hostname  : {hostname}")
+    print(f"OpenPorts : {open_ports if open_ports else 'None'}")
+    print(f"Risk Level: {calculate_risk(suspicious, internet_enabled)}")
 
-        print(f"IP        : {ip}")
-        print(f"Hostname  : {hostname}")
-        print(f"OpenPorts : {open_ports}")
-        print(f"Risk Level: {calculate_risk(suspicious)}")
+    if suspicious:
+        print("⚠ ALERT : Suspicious Services Detected")
+        for p, desc in suspicious.items():
+            print(f"   - Port {p} : {desc}")
 
-        if suspicious:
-            print("ALERT : Suspicious Ports Detected")
-            for p, desc in suspicious.items():
-                print(f"   - Port {p} : {desc}")
+    print("-" * 50)
 
-        print("-" * 40)
-
+print("\nScan Completed ✔")
