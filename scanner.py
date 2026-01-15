@@ -23,7 +23,6 @@ SUSPICIOUS_PORTS = {
     5900: "VNC"
 }
 
-# ---------------- FUNCTIONS ----------------
 
 def ping_host(ip):
     try:
@@ -79,7 +78,6 @@ def calculate_risk(suspicious, internet_ports):
         return "HIGH"
 
 
-# ---------------- MAIN ----------------
 
 print("=" * 60)
 print(" LAB NETWORK – INTERNET ACCESS VIOLATION SCANNER ")
@@ -108,27 +106,26 @@ for i in range(1, 255):
     print(f"Risk Level: {risk}")
 
     if internet_ports:
-        print("🚫 INTERNET ACCESS ATTEMPT DETECTED")
+        print("INTERNET ACCESS ATTEMPT DETECTED")
         print(f"   Ports  : {internet_ports}")
         violators.append(ip)
 
     if suspicious:
-        print("⚠ Suspicious Services:")
+        print("Suspicious Services:")
         for p, d in suspicious.items():
             print(f"   - {p} ({d})")
 
     print("-" * 60)
 
-# -------- Summary --------
 
 print("\nSUMMARY REPORT")
 print("=" * 60)
 
 if violators:
-    print("❌ PCs Attempting Internet Access:")
+    print("PCs Attempting Internet Access:")
     for v in violators:
         print(" -", v)
 else:
-    print("✅ No Internet Access Violations Detected")
+    print("No Internet Access Violations Detected")
 
 print("\nScan Finished ✔")
