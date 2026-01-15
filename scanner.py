@@ -57,9 +57,6 @@ def scan_ports(ip, ports):
 
 
 def detect_internet_attempt(open_ports):
-    """
-    If PC has HTTP/HTTPS ports open → likely internet usage
-    """
     found = []
     for p in open_ports:
         if p in INTERNET_PORTS:
@@ -80,7 +77,7 @@ def calculate_risk(suspicious, internet_ports):
 
 
 print("=" * 60)
-print(" LAB NETWORK – INTERNET ACCESS VIOLATION SCANNER ")
+print(" LAB NETWORK - INTERNET ACCESS VIOLATION SCANNER ")
 print("=" * 60)
 print()
 
