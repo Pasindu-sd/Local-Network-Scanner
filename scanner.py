@@ -76,4 +76,102 @@ def calculate_risk(suspicious, internet_ports):
         return "HIGH"
 
 
-def run_network_s
+def run_network_scan():
+    print("\n" + "=" * 65)
+    print("   MODULE 1 : LOCAL NETWORK RISK SCANNER")
+    print("=" * 65)
+
+    violators = []
+
+    for i in range(1, 255):
+        ip = NETWORK + str(i)
+
+        if not ping_host(ip):
+            continue
+
+        hostname = get_hostname(ip)
+        open_ports = scan_ports(ip, PORTS)
+        internet_ports = detect_internet_capability(open_ports)
+
+        suspicious = {
+            p: SUSPICIOUS_PORTS[p]
+            for p in open_ports if p in SUSPICIOUS_PORTS
+        }
+
+        risk = calculate_risk(suspicious, internet_ports)
+
+        print(f"\nIP        : {ip}")
+        print(f"Hostname  : {hostname}")
+        print(f"OpenPorts : {open_ports if open_ports else 'None'}")
+        print(f"RiskLevel : {risk}")
+
+        if internet_ports:
+            print("⚠ POTENTIAL INTERNET ACCESS CAPABILITY")
+            print(f"   Ports  : {internet_ports}")
+            violators.append(ip)
+
+        if suspicious:
+            print("⚠ Suspicious Services:")
+            for p, d in suspicious.items():
+                print(f"   - {p} ({d})")
+
+    print("\n" + "-" * 65)
+    print("Scanner Summary")
+    if violators:
+        for v in violators:
+            print(" -", v)
+    else:
+        print(" No risky hosts detected")
+    print("-" * 65)
+
+
+# ================= DNS MONITOR =================
+
+def is_local_domain(domain):
+    return domain.endswith((".local", ".arpa", ".lan"))
+
+
+def dns_packet_handler(packet):
+    if packet.haslayer(DNS) and packet.haslayer(DNSQR):
+        domain = packet[DNSQR].qname.decode(errors="ignore").strip(".")
+        if is_local_domain(domain):
+            return
+
+        src_ip = packet[IP].src
+        dst_ip = packet[IP].dst
+        time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+        print("\n🚫 REAL INTERNET ATTEMPT DETECTED (DNS)")
+        print(f"   Time      : {time}")
+        print(f"   Source PC : {src_ip}")
+        print(f"   DNS Server: {dst_ip}")
+        print(f"   Domain    : {domain}")
+        print("-" * 65)
+
+
+def start_dns_monitor():
+    print("\n" + "=" * 65)
+    print("   MODULE 2 : REAL INTERNET ACTIVITY MONITOR (DNS)")
+    print("   Listening on UDP port 53...")
+    print("=" * 65 + "\n")
+
+    sniff(
+        filter="udp port 53",
+        prn=dns_packet_handler,
+        store=False
+    )
+
+
+# ================= MAIN =================
+
+print("=" * 65)
+print(" LAB NETWORK INTERNET ACCESS MONITORING SYSTEM ")
+print(" Blue Team | SOC | University Lab Security ")
+print("=" * 65)
+
+# Run scanner once
+run_network_scan()
+
+# Start DNS monitor in live mode
+print("\nStarting LIVE DNS Monitoring (Press CTRL+C to stop)...")
+start_dns_monitor()
