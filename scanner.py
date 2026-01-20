@@ -5,7 +5,6 @@ from datetime import datetime
 
 from scapy.all import sniff, IP, UDP, DNS, DNSQR
 
-# ================= CONFIG =================
 
 NETWORK = "192.168.56."
 
@@ -28,7 +27,6 @@ SUSPICIOUS_PORTS = {
     5900: "VNC"
 }
 
-# ================= NETWORK SCANNER =================
 
 def ping_host(ip):
     try:
@@ -106,12 +104,12 @@ def run_network_scan():
         print(f"RiskLevel : {risk}")
 
         if internet_ports:
-            print("⚠ POTENTIAL INTERNET ACCESS CAPABILITY")
+            print("POTENTIAL INTERNET ACCESS CAPABILITY")
             print(f"   Ports  : {internet_ports}")
             violators.append(ip)
 
         if suspicious:
-            print("⚠ Suspicious Services:")
+            print("Suspicious Services:")
             for p, d in suspicious.items():
                 print(f"   - {p} ({d})")
 
@@ -125,7 +123,6 @@ def run_network_scan():
     print("-" * 65)
 
 
-# ================= DNS MONITOR =================
 
 def is_local_domain(domain):
     return domain.endswith((".local", ".arpa", ".lan"))
@@ -169,5 +166,5 @@ print("=" * 65)
 
 run_network_scan()
 
-print("\nStarting LIVE DNS Monitoring (Press CTRL+C to stop)...")
+print("\nStarting LIVE DNS Monitoring")
 start_dns_monitor()
