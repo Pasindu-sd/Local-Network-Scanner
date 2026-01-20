@@ -141,7 +141,7 @@ def dns_packet_handler(packet):
         dst_ip = packet[IP].dst
         time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-        print("\n🚫 REAL INTERNET ATTEMPT DETECTED (DNS)")
+        print("\nREAL INTERNET ATTEMPT DETECTED (DNS)")
         print(f"   Time      : {time}")
         print(f"   Source PC : {src_ip}")
         print(f"   DNS Server: {dst_ip}")
@@ -162,16 +162,12 @@ def start_dns_monitor():
     )
 
 
-# ================= MAIN =================
-
 print("=" * 65)
 print(" LAB NETWORK INTERNET ACCESS MONITORING SYSTEM ")
 print(" Blue Team | SOC | University Lab Security ")
 print("=" * 65)
 
-# Run scanner once
 run_network_scan()
 
-# Start DNS monitor in live mode
 print("\nStarting LIVE DNS Monitoring (Press CTRL+C to stop)...")
 start_dns_monitor()
