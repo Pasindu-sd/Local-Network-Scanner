@@ -1,6 +1,11 @@
 import socket
 import subprocess
-import ipaddress
+import threading
+from datetime import datetime
+
+from scapy.all import sniff, IP, UDP, DNS, DNSQR
+
+# ================= CONFIG =================
 
 NETWORK = "192.168.56."
 
@@ -23,6 +28,7 @@ SUSPICIOUS_PORTS = {
     5900: "VNC"
 }
 
+# ================= NETWORK SCANNER =================
 
 def ping_host(ip):
     try:
@@ -56,17 +62,12 @@ def scan_ports(ip, ports):
     return open_ports
 
 
-def detect_internet_attempt(open_ports):
-    found = []
-    for p in open_ports:
-        if p in INTERNET_PORTS:
-            found.append(p)
-    return found
+def detect_internet_capability(open_ports):
+    return [p for p in open_ports if p in INTERNET_PORTS]
 
 
 def calculate_risk(suspicious, internet_ports):
     score = len(suspicious) * 2 + len(internet_ports) * 3
-
     if score == 0:
         return "LOW"
     elif score <= 4:
@@ -75,54 +76,4 @@ def calculate_risk(suspicious, internet_ports):
         return "HIGH"
 
 
-
-print("=" * 60)
-print(" LAB NETWORK - INTERNET ACCESS VIOLATION SCANNER ")
-print("=" * 60)
-print()
-
-violators = []
-
-for i in range(1, 255):
-    ip = NETWORK + str(i)
-
-    if not ping_host(ip):
-        continue
-
-    hostname = get_hostname(ip)
-    open_ports = scan_ports(ip, PORTS)
-    internet_ports = detect_internet_attempt(open_ports)
-
-    suspicious = {p: SUSPICIOUS_PORTS[p] for p in open_ports if p in SUSPICIOUS_PORTS}
-
-    risk = calculate_risk(suspicious, internet_ports)
-
-    print(f"IP        : {ip}")
-    print(f"Hostname  : {hostname}")
-    print(f"OpenPorts : {open_ports if open_ports else 'None'}")
-    print(f"Risk Level: {risk}")
-
-    if internet_ports:
-        print("INTERNET ACCESS ATTEMPT DETECTED")
-        print(f"   Ports  : {internet_ports}")
-        violators.append(ip)
-
-    if suspicious:
-        print("Suspicious Services:")
-        for p, d in suspicious.items():
-            print(f"   - {p} ({d})")
-
-    print("-" * 60)
-
-
-print("\nSUMMARY REPORT")
-print("=" * 60)
-
-if violators:
-    print("PCs Attempting Internet Access:")
-    for v in violators:
-        print(" -", v)
-else:
-    print("No Internet Access Violations Detected")
-
-print("\nScan Finished ✔")
+def run_network_s
