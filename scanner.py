@@ -4,7 +4,6 @@ import time
 
 NETWORK = " 192.168.8."
 
-# Common ports
 PORTS = [21, 22, 23, 53, 80, 443, 3389, 8080]
 
 INTERNET_PORTS = [53, 80, 443, 8080]
@@ -49,9 +48,6 @@ def scan_ports(ip, ports):
 
 
 def dns_test():
-    """
-    If DNS resolution works → system has internet path
-    """
     try:
         socket.gethostbyname("google.com")
         return True
@@ -105,13 +101,13 @@ for i in range(1, 255):
     internet_used = [p for p in open_ports if p in INTERNET_PORTS]
 
     if internet_used and dns_available:
-        print("⚠ INTERNET ACCESS ATTEMPT DETECTED")
+        print("INTERNET ACCESS ATTEMPT DETECTED")
         print("   Ports :", internet_used)
         violators.append(ip)
 
     suspicious = [p for p in open_ports if p in SUSPICIOUS_PORTS]
     if suspicious:
-        print("⚠ Suspicious Services:")
+        print("Suspicious Services:")
         for p in suspicious:
             print(f"   - {p} ({SUSPICIOUS_PORTS[p]})")
 
@@ -128,4 +124,4 @@ if violators:
 else:
     print("No Internet Access Violations Detected")
 
-print("\nScan Completed ✔")
+print("\nScan Completed")
