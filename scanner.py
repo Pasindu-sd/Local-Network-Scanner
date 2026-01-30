@@ -81,16 +81,16 @@ def calculate_risk(open_ports):
         return "HIGH"
 
 
-print("=" * 65)
+print()
 print(" LAB NETWORK INTERNET ATTEMPT DETECTOR (NO SCAPY)")
 print(" Blue Team | SOC | University Lab Security ")
-print("=" * 65)
+print()
 
 violators = []
 
 dns_available = dns_test()
 print("\nDNS Resolution Available : " + str(dns_available))
-print("-" * 65)
+print()
 
 for i in range(1, 255):
     ip = NETWORK + str(i)
