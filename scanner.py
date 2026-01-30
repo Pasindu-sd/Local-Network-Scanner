@@ -2,7 +2,7 @@ import socket
 import subprocess
 import time
 
-NETWORK = " 192.168.8."
+NETWORK = "192.168.8."
 
 PORTS = [21, 22, 23, 53, 80, 443, 3389, 8080]
 
