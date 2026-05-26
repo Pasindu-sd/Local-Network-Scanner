@@ -23,7 +23,6 @@ python local_network_scanner.py -t 192.168.1.0/24 --fast
 python local_network_scanner.py -t 192.168.1.0/24 --json results.json
 
 ```
-=======
 # Local Network Scanner
 
 Simple Python-based Local Network Scanner.
